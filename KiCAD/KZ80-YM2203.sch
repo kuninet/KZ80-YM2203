@@ -1,4 +1,5 @@
 EESchema Schematic File Version 4
+LIBS:KZ80-YM2203-cache
 EELAYER 30 0
 EELAYER END
 $Descr A4 11693 8268
@@ -286,7 +287,7 @@ Connection ~ 8300 1950
 Wire Wire Line
 	8300 1950 8350 1950
 $Comp
-L Z80-CPUB-rescue:Conn_02x20_Odd_Even J1
+L KZ80-YM2203-rescue:Conn_02x20_Odd_Even-Z80-CPUB-rescue J1
 U 1 1 5B55D8C4
 P 1150 1850
 F 0 "J1" H 1200 2850 50  0000 C CNN
@@ -1455,13 +1456,13 @@ F 3 "~" H 2450 4700 50  0001 C CNN
 $EndComp
 Wire Wire Line
 	2450 4600 2450 4700
+Connection ~ 2450 4600
+Wire Wire Line
+	2450 4600 2600 4600
 Wire Bus Line
 	1900 550  1900 3400
 Wire Bus Line
 	4950 550  4950 3300
 Wire Bus Line
 	600  550  600  4150
-Connection ~ 2450 4600
-Wire Wire Line
-	2450 4600 2600 4600
 $EndSCHEMATC

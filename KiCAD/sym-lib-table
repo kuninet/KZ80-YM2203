@@ -1,5 +1,4 @@
 (sym_lib_table
   (lib (name YAMAHA)(type Legacy)(uri ${KIPRJMOD}/YAMAHA.lib)(options "")(descr ""))
-  (lib (name KZ80-RTCLCD-rescue)(type Legacy)(uri /Users/kuninet/github/KZ80-RTCLCD/KiCAD/KZ80-RTCLCD/KZ80-RTCLCD-rescue.lib)(options "")(descr ""))
-  (lib (name Z80-CPUB-rescue)(type Legacy)(uri /Users/kuninet/github/Z80_CPUB/KiCAD/Z80-CPUB-rescue.lib)(options "")(descr ""))
+  (lib (name KZ80-YM2203-rescue)(type Legacy)(uri ${KIPRJMOD}/KZ80-YM2203-rescue.lib)(options "")(descr ""))
 )
