@@ -1,0 +1,253 @@
+ AS V1.42 Beta [Bld 182] - Source File VGMCPM.asm - Page 1 - 12/26/20 16:08:39
+
+
+       1/       0 :                     ;
+       2/       0 :                     ; YM2203 VGM PLAY FOR CP/M-80
+       3/       0 :                     ;
+       4/       0 :                     	CPU	Z80
+       5/       0 :                     
+       6/       0 : ="Z80"              TARGET:	equ	"Z80"
+       7/       0 :                     
+       8/       0 : =5H                 BDOS	EQU	0005H
+       9/       0 : =8H                 DMA	EQU	0008H
+      10/       0 : =5CH                FCB	EQU	005CH
+      11/       0 :                     
+      12/       0 : =40H                OPM_ADDR	EQU	040H
+      13/       0 : =41H                OPM_DATA	EQU	041H
+      14/       0 :                     ;
+      15/       0 :                     
+      16/       0 :                     ;
+      17/     100 :                     	ORG	100H
+      18/     100 :                     ;
+      19/     100 :                     MAIN:
+      20/     100 : 11 5C 00            	LD	DE,FCB		
+      21/     103 : 0E 0F               	LD	C,0FH		;ファイルOPEN
+      22/     105 : CD 05 00            	CALL	BDOS
+      23/     108 : B7                  	OR	A			;成功?
+      24/     109 : C2 10 01            	JP	NZ,OPEN_ERROR
+      25/     10C :                     ;
+      26/     10C : CD 42 01            	CALL	MAIN1		
+      27/     10F : C9                  	RET
+      28/     110 :                     ;
+      29/     110 :                     OPEN_ERROR:
+      30/     110 : 11 E2 01            	LD	DE,ERMSG1	;ERROR MSG
+      31/     113 : 0E 09               	LD	C,09H		;string output function
+      32/     115 : CD 05 00            	CALL	BDOS
+      33/     118 : C9                  	RET		
+      34/     119 :                     ;
+      35/     119 :                     READ_ERROR:
+      36/     119 : 11 F9 01            	LD	DE,ERMSG2	;ERROR MSG
+      37/     11C : 0E 09               	LD	C,09H		;string output function
+      38/     11E : CD 05 00            	CALL	BDOS
+      39/     121 : C9                  	RET		
+      40/     122 :                     ;
+      41/     122 :                     GETDATA:
+      42/     122 : D5                  	PUSH DE
+      43/     123 : 7E                  	LD	A,(HL)	; GET COMMAND
+      44/     124 : F5                  	PUSH AF
+      45/     125 : 23                  	INC	HL
+      46/     126 :                     ;
+      47/     126 :                     ; バッファEND判定
+      48/     126 :                     ;
+      49/     126 : 11 8A 02            	LD  DE,DMAEND
+      50/     129 : EB                  	EX  DE,HL
+      51/     12A : ED 52               	SBC HL,DE
+      52/     12C : C2 3E 01            	JP  NZ,GETDATA_END
+      53/     12F :                     ;
+      54/     12F :                     ; シーケンシャル読み出し
+      55/     12F :                     ;
+      56/     12F : 11 5C 00            	LD	DE,FCB
+      57/     132 : 0E 14               	LD	C,014h
+      58/     134 : CD 05 00            	CALL BDOS
+      59/     137 : B7                  	OR  A
+      60/     138 : C2 19 01            	JP  NZ,READ_ERROR
+ AS V1.42 Beta [Bld 182] - Source File VGMCPM.asm - Page 2 - 12/26/20 16:08:39
+
+
+      61/     13B :                     ;
+      62/     13B : 11 0A 02            	LD  DE,NEWDMA
+      63/     13E :                     ;
+      64/     13E :                     GETDATA_END:
+      65/     13E : EB                  	EX DE,HL
+      66/     13F : F1                  	POP AF
+      67/     140 : D1                  	POP DE
+      68/     141 : C9                  	RET
+      69/     142 :                     
+      70/     142 :                     MAIN1:
+      71/     142 : 11 0A 02            	LD	DE,NEWDMA
+      72/     145 : 0E 1A               	LD	C,1AH		;set DMA address function
+      73/     147 : CD 05 00            	CALL	BDOS
+      74/     14A :                     
+      75/     14A : 11 5C 00            	LD	DE,FCB
+      76/     14D : 0E 14               	LD	C,014h
+      77/     14F : CD 05 00            	CALL BDOS
+      78/     152 : B7                  	OR  A
+      79/     153 : C2 19 01            	JP  NZ,READ_ERROR
+      80/     156 :                     ;
+      81/     156 : 21 0A 02            	LD HL,NEWDMA
+      82/     159 :                     LOOP:
+      83/     159 : CD 22 01            	CALL GETDATA	; 1バイトデータ取得
+      84/     15C : FE 55               	CP	055H
+      85/     15E : CA 86 01            	JP	Z,PLAY
+      86/     161 : FE 61               	CP	061H
+      87/     163 : CA 9F 01            	JP	Z,WAIT1
+      88/     166 : FE 62               	CP	062H
+      89/     168 : CA AD 01            	JP	Z,WAIT2
+      90/     16B : FE 63               	CP	063H
+      91/     16D : CA B6 01            	JP	Z,WAIT3
+      92/     170 : FE 64               	CP	064H
+      93/     172 : CA B6 01            	JP	Z,WAIT3
+      94/     175 : FE 66               	CP	066H
+      95/     177 : CA 85 01            	JP	Z,END_RTN
+      96/     17A :                     ;
+      97/     17A : FE 70               	CP	70H
+      98/     17C : CA C4 01            	JP	Z,WAIT4
+      99/     17F : C2 BF 01            	JP	NZ,CHK_WAIT
+     100/     182 :                     NEXT:
+     101/     182 : C3 59 01            	JP	LOOP
+     102/     185 :                     ;
+     103/     185 :                     END_RTN:
+     104/     185 : C9                  	RET	; GOTO MAIN	
+     105/     186 :                     ;
+     106/     186 :                     PLAY:
+     107/     186 : CD 22 01            	CALL GETDATA
+     108/     189 : 57                  	LD 	D,A
+     109/     18A : CD 22 01            	CALL GETDATA
+     110/     18D : 5F                  	LD 	E,A
+     111/     18E :                     WRITEOPN:
+     112/     18E :                     ; STATUS CHECK WAIT
+     113/     18E : DB 40               	IN  A,(OPM_ADDR)
+     114/     190 : 07                  	RLCA
+     115/     191 : 38 FB               	JR      C,WRITEOPN
+     116/     193 :                     ; REG OUT
+     117/     193 : 7A                  	LD      A,D
+     118/     194 : D3 40               	OUT     (OPM_ADDR),A
+     119/     196 : DD 7E 00            	LD      A,(IX+0)        ;DUMMY
+     120/     199 :                     ; DATA OUT
+ AS V1.42 Beta [Bld 182] - Source File VGMCPM.asm - Page 3 - 12/26/20 16:08:39
+
+
+     121/     199 : 7B                  	LD      A,E
+     122/     19A : D3 41               	OUT     (OPM_DATA),A
+     123/     19C : C3 82 01            	JP 	NEXT
+     124/     19F :                     ;
+     125/     19F :                     WAIT1:
+     126/     19F : CD 22 01            	CALL GETDATA
+     127/     1A2 : 5F                  	LD	E,A
+     128/     1A3 : CD 22 01            	CALL GETDATA
+     129/     1A6 : 57                  	LD	D,A
+     130/     1A7 : CD D0 01            	CALL	WAIT
+     131/     1AA : C3 82 01            	JP NEXT
+     132/     1AD :                     ;
+     133/     1AD :                     WAIT2:
+     134/     1AD : 11 DF 02            	LD	DE,735	
+     135/     1B0 : CD D0 01            	CALL	WAIT
+     136/     1B3 : C3 82 01            	JP 	NEXT
+     137/     1B6 :                     ;
+     138/     1B6 :                     WAIT3:
+     139/     1B6 : 11 72 03            	LD 	DE,882
+     140/     1B9 : CD D0 01            	CALL 	WAIT
+     141/     1BC : C3 82 01            	JP 	NEXT
+     142/     1BF :                     ;
+     143/     1BF :                     CHK_WAIT:
+     144/     1BF : FE 80               	CP	80H
+     145/     1C1 : D2 82 01            	JP	NC,NEXT
+     146/     1C4 :                     WAIT4:
+     147/     1C4 : E6 0F               	AND	0FH
+     148/     1C6 : 3C                  	INC	A
+     149/     1C7 : 16 00               	LD 	D,0
+     150/     1C9 : 5F                  	LD	E,A
+     151/     1CA : CD D0 01            	CALL	WAIT
+     152/     1CD : C3 82 01            	JP 	NEXT
+     153/     1D0 :                     ;  
+     154/     1D0 :                     WAIT:	
+     155/     1D0 : CD D9 01            	CALL	WAIT1MS	
+     156/     1D3 : 1B                  	DEC	DE		
+     157/     1D4 : 7A                  	LD	A,D
+     158/     1D5 : B3                  	OR	E
+     159/     1D6 : 20 F8               	JR	NZ,WAIT
+     160/     1D8 : C9                  	RET		
+     161/     1D9 :                     ; 
+     162/     1D9 :                     WAIT1MS:	
+     163/     1D9 : 01 01 00            	LD	BC,1		 
+     164/     1DC :                     WAIT1MSLOOP:
+     165/     1DC : 0B                  	DEC	BC
+     166/     1DD :                     ;	NOP		;DUMMY (clock 4)
+     167/     1DD : 79                  	LD	A,C
+     168/     1DE : B0                  	OR	B
+     169/     1DF : 20 FB               	JR	NZ,WAIT1MSLOOP
+     170/     1E1 : C9                  	RET
+     171/     1E2 :                     ;
+     172/     1E2 :                     ;
+     173/     1E2 :                     ;
+     174/     1E2 :                     ;
+     175/     1E2 : 43 61 6E 6E 6F 74   ERMSG1:	DB	'Cannot open that file.$'
+              1E8 : 20 6F 70 65 6E 20 
+              1EE : 74 68 61 74 20 66 
+              1F4 : 69 6C 65 2E 24    
+     176/     1F9 : 66 69 6C 65 20 72   ERMSG2:	DB	'file read error.$'
+              1FF : 65 61 64 20 65 72 
+ AS V1.42 Beta [Bld 182] - Source File VGMCPM.asm - Page 4 - 12/26/20 16:08:39
+
+
+              205 : 72 6F 72 2E 24    
+     177/     20A :                     NEWDMA  DS  128
+     178/     28A : =28AH               DMAEND	EQU $
+     179/     28A :                     END
+     180/     28A :                     
+ AS V1.42 Beta [Bld 182] - Source File VGMCPM.asm - Page 5 - 12/26/20 16:08:39
+
+
+  Symbol Table (* = unused):
+  --------------------------
+
+*ARCHITECTURE :                                      "x86_64-unknown-linux" - |
+ BDOS :                           5 - | *BIGENDIAN :                      0 - |
+*BRANCHEXT :                      0 - | *CASESENSITIVE :                  0 - |
+ CHK_WAIT :                     1BF C | *CONSTPI :        3.141592653589793 - |
+*DATE :                  "12/26/20" - | *DMA :                            8 - |
+ DMAEND :                       28A - | *END :                          28A C |
+ END_RTN :                      185 C |  ERMSG1 :                       1E2 C |
+ ERMSG2 :                       1F9 C | *FALSE :                          0 - |
+ FCB :                           5C - | *FULLPMMU :                       1 - |
+ GETDATA :                      122 C |  GETDATA_END :                  13E C |
+*HAS64 :                          1 - | *HASDSP :                         0 - |
+*HASFPU :                         0 - | *HASPMMU :                        0 - |
+*INEXTMODE :                      0 - | *INLWORDMODE :                    0 - |
+*INMAXMODE :                      0 - | *INSRCMODE :                      0 - |
+*INSUPMODE :                      0 - | *LISTON :                         1 - |
+ LOOP :                         159 C | *MACEXP :                         7 - |
+*MAIN :                         100 C |  MAIN1 :                        142 C |
+*MOMCPU :                        80 - | *MOMCPUNAME :                 "Z80" - |
+*NESTMAX :                      100 - |  NEWDMA :                       20A C |
+ NEXT :                         182 C |  OPEN_ERROR :                   110 C |
+ OPM_ADDR :                      40 - |  OPM_DATA :                      41 - |
+*PACKING :                        0 - | *PADDING :                        1 - |
+ PLAY :                         186 C |  READ_ERROR :                   119 C |
+*RELAXED :                        0 - | *TARGET :                     "Z80" - |
+*TIME :                  "16:08:39" - | *TRUE :                           1 - |
+*VERSION :                     142F - |  WAIT :                         1D0 C |
+ WAIT1 :                        19F C |  WAIT1MS :                      1D9 C |
+ WAIT1MSLOOP :                  1DC C |  WAIT2 :                        1AD C |
+ WAIT3 :                        1B6 C |  WAIT4 :                        1C4 C |
+ WRITEOPN :                     18E C | *Z80SYNTAX :                      0 - |
+
+     59 symbols
+     33 unused symbols
+
+ AS V1.42 Beta [Bld 182] - Source File VGMCPM.asm - Page 6 - 12/26/20 16:08:39
+
+
+  Code Pages:
+  ----------
+
+STANDARD (0 changed characters)
+
+1 code page
+
+0.15 seconds assembly time
+
+    180 lines source file
+      2 passes
+      0 errors
+      0 warnings
