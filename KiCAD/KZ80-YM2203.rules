@@ -1,0 +1,101 @@
+
+(rules PCB KZ80-YM2203
+  (snap_angle 
+    fortyfive_degree
+  )
+  (autoroute_settings
+    (fanout off)
+    (autoroute on)
+    (postroute on)
+    (vias on)
+    (via_costs 50)
+    (plane_via_costs 5)
+    (start_ripup_costs 100)
+    (start_pass_no 3048)
+    (layer_rule F.Cu
+      (active on)
+      (preferred_direction horizontal)
+      (preferred_direction_trace_costs 1.0)
+      (against_preferred_direction_trace_costs 2.3)
+    )
+    (layer_rule B.Cu
+      (active on)
+      (preferred_direction vertical)
+      (preferred_direction_trace_costs 1.0)
+      (against_preferred_direction_trace_costs 1.8)
+    )
+  )
+  (rule
+    (width 250.0)
+    (clear 200.2)
+    (clear 125.0 (type smd_to_turn_gap))
+    (clear 50.0 (type smd_smd))
+  )
+  (padstack "Via[0-1]_800:400_um"
+    (shape
+      (circle F.Cu 800.0 0.0 0.0)
+    )
+    (shape
+      (circle B.Cu 800.0 0.0 0.0)
+    )
+    (attach off)
+  )
+  (via 
+    "Via[0-1]_800:400_um" "Via[0-1]_800:400_um" default
+  )
+  (via 
+    "Via[0-1]_800:400_um-kicad_default" "Via[0-1]_800:400_um" "kicad_default"
+  )
+  (via 
+    "Via[0-1]_800:400_um-BOLD" "Via[0-1]_800:400_um" BOLD
+  )
+  (via_rule
+    default "Via[0-1]_800:400_um"
+  )
+  (via_rule
+    "kicad_default" "Via[0-1]_800:400_um-kicad_default"
+  )
+  (via_rule
+    BOLD "Via[0-1]_800:400_um-BOLD"
+  )
+  (class default
+    (clearance_class default)
+    (via_rule default)
+    (rule
+      (width 250.0)
+    )
+    (circuit 
+      (use_layer F.Cu B.Cu)
+    )
+  )
+  (class "kicad_default"
+    "Net-(C4-Pad1)" "Net-(C5-Pad1)" "Net-(C8-Pad2)" "Net-(C8-Pad1)" "Net-(C9-Pad1)" "Net-(C10-Pad2)" "Net-(C10-Pad1)" /A7
+    /A6 /A5 /A4 /A3 /A0 /RES /~IOWR /~IORD
+    /D7 /D6 /D5 /D4 /D3 /D2 /D1 /D0
+    "Net-(J2-Pad5)" "Net-(J2-Pad3)" "Net-(J2-Pad2)" "Net-(J2-Pad1)" "Net-(J3-Pad5)" "Net-(J3-Pad3)" "Net-(J3-Pad2)" "Net-(J3-Pad1)"
+    "Net-(J4-Pad2)" /~IRQ /IOA7 /IOA6 /IOA5 /IOA4 /IOA3 /IOA2
+    /IOA1 /IOA0 /IOB7 /IOB6 /IOB5 /IOB4 /IOB3 /IOB2
+    /IOB1 /IOB0 "Net-(JP1-Pad3)" "Net-(JP1-Pad2)" "Net-(R1-Pad1)" "Net-(R3-Pad2)" "Net-(R3-Pad1)" "Net-(R4-Pad2)"
+    "Net-(R5-Pad2)" "Net-(RV2-Pad1)" "Net-(U1-Pad1)" "Net-(U1-Pad5)" "Net-(U3-Pad4)" /~RES "Net-(U4-Pad39)" "Net-(U4-Pad23)"
+    "Net-(U4-Pad22)" "Net-(J2-Pad7)" "Net-(J3-Pad7)"
+    (clearance_class "kicad_default")
+    (via_rule kicad_default)
+    (rule
+      (width 250.0)
+    )
+    (circuit 
+      (use_layer F.Cu B.Cu)
+    )
+  )
+  (class BOLD
+    VCC GNDA GND
+    (clearance_class BOLD)
+    (via_rule BOLD)
+    (rule
+      (width 600.0)
+    )
+    (circuit 
+      (use_layer F.Cu B.Cu)
+    )
+  )
+)

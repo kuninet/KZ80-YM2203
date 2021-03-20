@@ -1,4 +1,5 @@
 (sym_lib_table
   (lib (name YAMAHA)(type Legacy)(uri ${KIPRJMOD}/YAMAHA.lib)(options "")(descr ""))
   (lib (name KZ80-YM2203-rescue)(type Legacy)(uri ${KIPRJMOD}/KZ80-YM2203-rescue.lib)(options "")(descr ""))
+  (lib (name AJ-1780)(type Legacy)(uri ${KIPRJMOD}/AJ-1780.lib)(options "")(descr ""))
 )
