@@ -24,6 +24,10 @@
       (path pcb 0  186500 -139000  86500 -139000  86500 -64000  186500 -64000
             186500 -139000)
     )
+    (keepout "" (polygon F.Cu 0  186500 -64000  186000 -64000  186000 -139000  186500 -139000
+            186500 -64000))
+    (keepout "" (polygon B.Cu 0  186500 -64000  186000 -64000  186000 -139000  186500 -139000
+            186500 -64000))
     (via "Via[0-1]_800:400_um")
     (rule
       (width 250)
@@ -1277,19 +1281,16 @@
     (net "Net-(J3-Pad7)"
       (pins J3-7 U2-9)
     )
-    (class kicad_default "" /A0 /A1 /A10 /A11 /A12 /A13 /A14 /A15 /A2 /A3
-      /A4 /A5 /A6 /A7 /A8 /A9 /CLK /D0 /D1 /D2 /D3 /D4 /D5 /D6 /D7 /HLDA /HOLD
-      /INT /IOA0 /IOA1 /IOA2 /IOA3 /IOA4 /IOA5 /IOA6 /IOA7 /IOB0 /IOB1 /IOB2
-      /IOB3 /IOB4 /IOB5 /IOB6 /IOB7 /RES /~INTA /~IORD /~IOWR /~IRQ /~MEMRD
-      /~MEMWR /~RDYIN /~RES /~RESIN "Net-(C10-Pad1)" "Net-(C10-Pad2)" "Net-(C4-Pad1)"
-      "Net-(C5-Pad1)" "Net-(C8-Pad1)" "Net-(C8-Pad2)" "Net-(C9-Pad1)" "Net-(J2-Pad1)"
-      "Net-(J2-Pad2)" "Net-(J2-Pad3)" "Net-(J2-Pad5)" "Net-(J2-Pad7)" "Net-(J3-Pad1)"
-      "Net-(J3-Pad2)" "Net-(J3-Pad3)" "Net-(J3-Pad5)" "Net-(J3-Pad7)" "Net-(J4-Pad2)"
-      "Net-(J4-Pad3)" "Net-(J4-Pad4)" "Net-(J5-Pad10)" "Net-(J5-Pad11)" "Net-(J5-Pad9)"
-      "Net-(J6-Pad10)" "Net-(J6-Pad11)" "Net-(J6-Pad9)" "Net-(JP1-Pad2)" "Net-(JP1-Pad3)"
-      "Net-(R1-Pad1)" "Net-(R3-Pad1)" "Net-(R3-Pad2)" "Net-(R4-Pad2)" "Net-(R5-Pad2)"
-      "Net-(RV2-Pad1)" "Net-(U1-Pad1)" "Net-(U1-Pad5)" "Net-(U3-Pad10)" "Net-(U3-Pad12)"
-      "Net-(U3-Pad4)" "Net-(U4-Pad22)" "Net-(U4-Pad23)" "Net-(U4-Pad39)"
+    (class kicad_default "" /A0 /A3 /A4 /A5 /A6 /A7 /D0 /D1 /D2 /D3 /D4 /D5
+      /D6 /D7 /IOA0 /IOA1 /IOA2 /IOA3 /IOA4 /IOA5 /IOA6 /IOA7 /IOB0 /IOB1
+      /IOB2 /IOB3 /IOB4 /IOB5 /IOB6 /IOB7 /RES /~IORD /~IOWR /~IRQ /~RES "Net-(C10-Pad1)"
+      "Net-(C10-Pad2)" "Net-(C4-Pad1)" "Net-(C5-Pad1)" "Net-(C8-Pad1)" "Net-(C8-Pad2)"
+      "Net-(C9-Pad1)" "Net-(J2-Pad1)" "Net-(J2-Pad2)" "Net-(J2-Pad3)" "Net-(J2-Pad5)"
+      "Net-(J2-Pad7)" "Net-(J3-Pad1)" "Net-(J3-Pad2)" "Net-(J3-Pad3)" "Net-(J3-Pad5)"
+      "Net-(J3-Pad7)" "Net-(J4-Pad2)" "Net-(JP1-Pad2)" "Net-(JP1-Pad3)" "Net-(R1-Pad1)"
+      "Net-(R3-Pad1)" "Net-(R3-Pad2)" "Net-(R4-Pad2)" "Net-(R5-Pad2)" "Net-(RV2-Pad1)"
+      "Net-(U1-Pad1)" "Net-(U1-Pad5)" "Net-(U3-Pad4)" "Net-(U4-Pad22)" "Net-(U4-Pad23)"
+      "Net-(U4-Pad39)"
       (circuit
         (use_via Via[0-1]_800:400_um)
       )
